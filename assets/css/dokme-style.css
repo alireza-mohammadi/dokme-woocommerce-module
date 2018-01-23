@@ -1,0 +1,19 @@
+.dokme-text{
+    font-size:14px;
+    padding:8px
+}
+.logo{
+    width:220px;
+    float:left;
+}
+ul{
+    padding:0
+}
+.tip{
+    font-size: 15px;
+    font-weight: bolder;
+    text-align: center;
+}
+.tip span{
+    color: #ff0052;
+}
