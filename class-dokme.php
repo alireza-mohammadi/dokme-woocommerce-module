@@ -2,6 +2,7 @@
 require_once 'includes/dokme_sendRequest.php';
 include_once 'includes/dokme_productsList.php';
 include_once 'includes/model/dokme_dbsync.php';
+include_once 'includes/dokme_getCategories.php';
 
 class Dokme
 {
@@ -63,6 +64,7 @@ class Dokme
     {
         add_menu_page(__('Dokme', 'access'), __('دکمه', 'access'), 'manage_options', __('dokme-settings', 'vibe'), array('Dokme', 'loadView'), WP_PLUGIN_URL . '/dokme/assets/images/logo.gif');
         add_submenu_page('dokme-settings', __('dokme-products', 'access'), __('کالاها'), 'manage_options', __('dokme-products'), array('Dokme', 'dokmeProducts'));
+        add_submenu_page('dokme-settings', __('dokme-category', 'access'), __('دسته‌بندی‌ها'), 'manage_options', __('dokme-category'), array('Dokme', 'dokmeCategory'));
     }
 
     public static function dokmeProducts()
@@ -71,6 +73,33 @@ class Dokme
         $list->prepare_items();
 
         echo "<form method='post'><input type='hidden' name='page' value='" . $_REQUEST['page'] . "'/>" . $list->display() . "</form>";
+    }
+
+    public static function dokmeCategory()
+    {
+        $categories = dokme_getCategories::getStoreCategories();
+        ?>
+        <br/>
+        <div class="alert alert-dismissable" id="MessageBox" role="alert" hidden>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">دسته بندی های منتخب</div>
+                <div class="panel-body">
+                    <p>فقط کالاهایی به دکمه ارسال میشوند که در دسته بندی  انتخاب شده باشد.</p>
+                    <form class="save-category" action="">
+                        <div class="dokme-tree">
+                            <?php echo dokme_getCategories::traverse($categories) ?>
+                        </div>
+                        <button type="button" class="btn btn-success" id="saveCategory">ذخیره</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <?php
     }
 
     public static function loadView()
@@ -190,6 +219,15 @@ class Dokme
         }
 
         echo json_encode($result);
+        wp_die();
+    }
+
+    public static function selectedCategories()
+    {
+        $status = update_site_option("DOKME_SELECTED_CATEGORIES", $_POST['categories']);
+        $message = $status ? 'با موفقیت ذخیره شد.' : 'خطایی در ذخیره سازی وجود دارد.';
+
+        echo json_encode(array('status' => $status, 'message' => $message));
         wp_die();
     }
 

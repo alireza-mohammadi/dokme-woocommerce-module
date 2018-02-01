@@ -25,12 +25,8 @@ global $dokme;
 require_once(DOKME_PLUGIN_DIR . 'class-dokme.php');
 $dokme = new Dokme(__FILE__);
 
-//function showMessage($class, $message)
-//{
-//    printf('<div class="%1$s"><p>%2$s</p></div>', $class, $message);
-//}
-
 // Ajax Request
 add_action('wp_ajax_updateToken', array('Dokme', 'updateToken'));
 add_action('wp_ajax_syncAllCategories', array('Dokme', 'syncAllCategories'));
 add_action('wp_ajax_syncAllProducts', array('Dokme', 'syncAllProducts'));
+add_action('wp_ajax_selectedCategories', array('Dokme', 'selectedCategories'));

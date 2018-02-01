@@ -15,6 +15,17 @@ class Dokme_Product
         $wcRestProducts = new WC_REST_Products_V1_Controller();
         $product = $wcRestProducts->prepare_item_for_response($productId, 'GET');
 
+        $categories = dokme_array_selected($product->data['categories'], 'id');
+        $selectedCategories = get_site_option('DOKME_SELECTED_CATEGORIES');
+        
+        if (!empty($selectedCategories)) {
+
+            $exist = dokme_is_exist($selectedCategories, $categories);
+            if (!$exist) {
+                return;
+            }
+        }
+
         $price = dokme_array_get($product->data, 'regular_price');
         if (empty($price)) {
             $price = dokme_array_get($product->data, 'price');
@@ -33,7 +44,7 @@ class Dokme_Product
             'weight' => dokme_array_get($product->data, 'weight'),
             'original_url' => dokme_array_get($product->data, 'permalink'),
             'brand_id' => '',
-            'categories' => dokme_array_selected($product->data['categories'], 'id'),
+            'categories' => $categories,
             'short_content' => dokme_array_get($product->data, 'short_description'),
             'long_content' => dokme_array_get($product->data, 'description'),
             'meta_keywords' => '',
@@ -76,11 +87,10 @@ class Dokme_Product
 
     public static function _getAttributes(array $data)
     {
-        if (empty(dokme_array_get($data, 'attributes'))) {
+        $dataset = dokme_array_get($data, 'attributes');
+        if (empty($dataset)) {
             return array();
         }
-
-        $dataset = dokme_array_get($data, 'attributes');
 
         $attributes = array();
         foreach ($dataset as $data) {
@@ -95,12 +105,13 @@ class Dokme_Product
 
     public static function _getVariations(array $data)
     {
-        if (empty(dokme_array_get($data, 'variations'))) {
+        $variations = dokme_array_get($data, 'variations');
+        if (empty($variations)) {
             return array();
         }
 
         try {
-            $variations = dokme_array_get($data, 'variations');
+            //$variations = dokme_array_get($data, 'variations');
             $attributes = dokme_array_get($data, 'attributes');
 
             $listVariations = array();

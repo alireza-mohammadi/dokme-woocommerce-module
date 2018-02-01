@@ -13,13 +13,24 @@ jQuery(function() {
     });
 
     jQuery('#syncAllProducts').on('click', function() {
-        console.log('run-ajax');
         pageCount = Math.ceil(productsLenght / chunk);
         setPercentage(0);
         jQuery('#progress').show();
         syncAllProducts();
     });
 
+    jQuery('.dokme-tree .collapse').on('click', function(e) {
+        $(this).parent().toggleClass('open');
+    });
+
+    jQuery('#saveCategory').on('click', function() {
+        var categories = [];
+        jQuery('input[type=checkbox]:checked').each(function(i) {
+            categories[i] = jQuery(this).val();
+        });
+
+        selectedCategories(categories);
+    });
     function updateToken() {
         var token = jQuery('#ApiTokenInput').val();
         if (token) {
@@ -108,6 +119,27 @@ jQuery(function() {
             }
         }).fail(function() {
             // pageNumber = 0;
+        });
+    }
+
+    function selectedCategories(categories) {
+        jQuery.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: ajaxurl,
+            action: 'selectedCategories',
+            data: {
+                action: 'selectedCategories',
+                categories: categories
+            }
+        }).done(function(data) {
+            if (data.status) {
+                message(true, data.message);
+            } else {
+                message(false, data.message);
+            }
+        }).fail(function() {
+
         });
     }
 

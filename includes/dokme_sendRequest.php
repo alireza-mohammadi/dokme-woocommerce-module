@@ -17,15 +17,23 @@ class Dokme_SendRequest
         $products = array();
 
         if (empty($ids)) {
-            return null;
+            return array('status' => false, 'message' => 'در ارسال خطایی وجود دارد.');
         }
 
         foreach ($ids as $id) {
-            $products[] = Dokme_Product::getProductDetail($id);
+            $result = Dokme_Product::getProductDetail($id);
+
+            if (empty($result)) {
+                continue;
+            }
+
+            $products[] = $result;
         }
-
-        $result = $this->sendRequset('products', 'POST', json_encode($products));
-
+        
+        $result = array('status' => true, 'message' => 'ارسال به دکمه با موفقیت انجام شد.');
+        if (!empty($products)) {
+            $result = $this->sendRequset('products', 'POST', json_encode($products));
+        }
         return $result;
     }
 
@@ -70,7 +78,7 @@ class Dokme_SendRequest
                     'User-Agent' => 'WordPress_Module_2.0.0'
                 ),
             );
-            $response = wp_remote_request("https://dokme.com/api/v1/public/$url", $args);
+            $response = wp_remote_request("http://dokme.com/api/v1/public/$url", $args);
 
             switch ($response['response']['code']) {
                 case 200:

@@ -1,4 +1,8 @@
 <?php
+$wcRestProducts = new WC_REST_Products_V1_Controller();
+$product = $wcRestProducts->prepare_item_for_response(5739, 'GET');
+file_put_contents(__DIR__ . '/log/5739.txt', json_encode($product));
+
 //$this->define('WC_ABSPATH', dirname(WC_PLUGIN_FILE) . '/');
 //    $args = array(
 //        'posts_per_page' => -1,
@@ -92,7 +96,7 @@ file_put_contents(__DIR__ . '/log/count.txt', json_encode($countPost));
                         </div>
                     </div><!-- ./ ارسال محصولات -->
                     <hr/>
-                    <div class="form-group tip">
+                    <div class="form-group dokme-tip">
                         <ul>
                             <li><span>در صورت به روز رسانی ماژول ارسال محصولات الزامی میباشد.</span></li>
                         </ul>

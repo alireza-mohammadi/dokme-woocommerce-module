@@ -13,8 +13,12 @@ if (!function_exists('dokme_array_get')) {
 
 if (!function_exists('dokme_array_selected')) {
 
-    function dokme_array_selected(array $dataset, $key, $default = null)
+    function dokme_array_selected($dataset, $key, $default = null)
     {
+        if (empty($dataset)) {
+            return $default;
+        }
+
         if (!is_array($dataset)) {
             return $default;
         }
@@ -31,4 +35,20 @@ if (!function_exists('dokme_array_selected')) {
     }
 
 }
+if (!function_exists('dokme_is_exist')) {
 
+    function dokme_is_exist($selected, $ids)
+    {
+        if (empty($selected) || empty($ids)) {
+            return false;
+        }
+
+        foreach ($ids as $id) {
+            if (array_search($id, $selected) !== false) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+}
