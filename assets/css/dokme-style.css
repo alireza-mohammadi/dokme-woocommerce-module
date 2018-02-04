@@ -1,21 +1,18 @@
-.dokme-text{
-    font-size:14px;
-    padding:8px
-}
-.logo{
-    width:220px;
-    float:left;
-}
-ul{
-    padding:0
-}
-.dokme-tip{
-    font-size: 15px;
-    font-weight: bolder;
+.dokme-btn{
+    display: inline-block;
+    padding: 5px;
+    background: #469A46;
+    color: #fff;
+    border: solid 1px #707070;
+    text-decoration: none;
     text-align: center;
+    min-width: 80px;
+    border-radius: 50px;
+    font-weight: 400;
+    font-size: 12px;
 }
-.dokme-tip span{
-    color: #ff0052;
+#dokme-api-token{
+    width: 100%;
 }
 
 /*
@@ -44,3 +41,23 @@ ul{
 .dokme-tree li.open > ul {
     display: block;
 }
+/*
+ * ProgressBar
+ */
+.dokme-progress-bar {
+    background-color: #ccc;
+    height: 15px;
+    padding: 1px;
+    width: 100%;
+    margin: 2px 0;
+
+}
+.dokme-progress-bar span {
+    display: inline-block;
+    float: right;
+    height: 100%;
+}
+.blue span {
+    background-color: #34c2e3;
+}
+

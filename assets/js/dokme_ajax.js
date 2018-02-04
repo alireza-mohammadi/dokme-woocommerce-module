@@ -14,8 +14,8 @@ jQuery(function() {
 
     jQuery('#syncAllProducts').on('click', function() {
         pageCount = Math.ceil(productsLenght / chunk);
-        setPercentage(0);
-        jQuery('#progress').show();
+        //setPercentage(0);
+        jQuery('#sync-progress').show();
         syncAllProducts();
     });
 
@@ -32,7 +32,7 @@ jQuery(function() {
         selectedCategories(categories);
     });
     function updateToken() {
-        var token = jQuery('#ApiTokenInput').val();
+        var token = jQuery('#dokme-api-token').val();
         if (token) {
             messageBox.hide();
             jQuery.ajax({
@@ -53,7 +53,7 @@ jQuery(function() {
                 }
             }).fail(function() { });
         } else {
-            message(false, 'فیلد توکن را وارد کنید.');
+            message(false, '<p>فیلد توکن را وارد کنید.</p>');
         }
     }
 
@@ -77,14 +77,14 @@ jQuery(function() {
 
     function syncAllProducts() {
         if (productsLenght === 0) {
-            message(true, 'همه محصولات ارسال شده است.');
-            jQuery('#progress').hide();
+            message(true, '<p>همه محصولات ارسال شده است.</p>');
+            jQuery('#sync-progress').hide();
             return;
         }
 
         if (pageNumber === pageCount) {
-            message(true, 'همه محصولات به سایت شرینو ارسال شد.');
-            jQuery('#progress').hide();
+            message(true, '<p>همه محصولات به سایت شرینو ارسال شد.</p>');
+            jQuery('#sync-progress').hide();
             return;
         }
 
@@ -103,13 +103,13 @@ jQuery(function() {
                 if (data.code === 429) {
                     messageBox.show(500)
                             .html(data.message)
-                            .removeClass('alert-danger')
-                            .removeClass('alert-success')
-                            .addClass('alert-warning');
+                            .removeClass('updated')
+                            .removeClass('error')
+                            .addClass('update-nag');
                     setTimeout(syncAllProducts, 61 * 1000);
                 } else {
                     message(data.status, data.message);
-                    jQuery('#progress').hide();
+                    jQuery('#sync-progress').hide();
                 }
             } else {
                 pageNumber++;
@@ -145,19 +145,18 @@ jQuery(function() {
 
     function setPercentage(percentage) {
         percentage = percentage > 100 ? 100 : percentage;
-        percentage = percentage < 0 ? 0 : percentage;
-        jQuery('#sync-progress')
-                .css('width', percentage + "%")
-                .attr('aria-valuemin', percentage + '%')
-                .html(percentage + '%');
+        //percentage = percentage < 0 ? 0 : percentage;
+        jQuery('#sync-progress span')
+                .css('width', percentage + '%')
+                .next().text(percentage + '%');
     }
 
     function message(status, message) {
-        messageBox.show(500)
+        messageBox.show(5)
                 .html(message)
-                .removeClass('alert-danger')
-                .removeClass('alert-success')
-                .removeClass('alert-warning')
-                .addClass(status ? 'alert-success' : 'alert-danger');
+                .removeClass('updated')
+                .removeClass('error')
+                .removeClass('update-nag')
+                .addClass(status ? 'updated' : 'error');
     }
 });

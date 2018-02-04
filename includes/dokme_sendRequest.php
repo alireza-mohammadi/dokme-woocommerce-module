@@ -17,7 +17,7 @@ class Dokme_SendRequest
         $products = array();
 
         if (empty($ids)) {
-            return array('status' => false, 'message' => 'در ارسال خطایی وجود دارد.');
+            return array('status' => false, 'message' => '<p>در ارسال خطایی وجود دارد.</p>');
         }
 
         foreach ($ids as $id) {
@@ -29,8 +29,8 @@ class Dokme_SendRequest
 
             $products[] = $result;
         }
-        
-        $result = array('status' => true, 'message' => 'ارسال به دکمه با موفقیت انجام شد.');
+
+        $result = array('status' => true, 'message' => '<p>ارسال به دکمه با موفقیت انجام شد.</p>');
         if (!empty($products)) {
             $result = $this->sendRequset('products', 'POST', json_encode($products));
         }
@@ -82,21 +82,21 @@ class Dokme_SendRequest
 
             switch ($response['response']['code']) {
                 case 200:
-                    return array('status' => true, 'message' => 'ارسال به دکمه با موفقیت انجام شد.');
+                    return array('status' => true, 'message' => '<p>ارسال به دکمه با موفقیت انجام شد.</p>');
                 case 401:
-                    return array('status' => false, 'message' => 'خطا! توکن وارد شده معتبر نمیباشد.');
+                    return array('status' => false, 'message' => '<p>خطا! توکن وارد شده معتبر نمیباشد.</p>');
                 case 403:
-                    return array('status' => false, 'message' => 'خطا! دسترسی  مجاز نمیباشد.');
+                    return array('status' => false, 'message' => '<p>خطا! دسترسی مجاز نمیاشد.</p>');
                 case 408:
-                    return array('status' => false, 'message' => 'خطا! درخواست منقضی شد.');
+                    return array('status' => false, 'message' => '<p>خطا! درخواست منقضی شده است.</p>');
                 case 429:
                 case 0:
-                    return array('status' => false, 'code' => 429, 'message' => 'فرایند ارسال محصولات به طول می انجامد لطفا صبور باشید.');
+                    return array('status' => false, 'code' => 429, 'message' => '<p>فرایند ارسال محصولات به طول می انجامد لطفا صبور باشید.</p>');
                 default:
-                    return array('status' => false, 'message' => 'error: ' . $response['response']['code']);
+                    return array('status' => false, 'message' => '<p>error: ' . $response['response']['code'] . '</p>');
             }
         }
-        return array('status' => false, 'message' => 'ابتدا توکن را از سرور دکمه دریافت کنید');
+        return array('status' => false, 'message' => '<p>وارد کردن توکن الزامی میباشد.</p>');
     }
 
 }

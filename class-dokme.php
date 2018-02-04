@@ -110,18 +110,9 @@ class Dokme
     public static function registerStyleScript($hook)
     {
         wp_enqueue_media();
-
-        wp_register_style('bootstrap-cu-dokme', plugins_url('/assets/css/bootstrap-cu-dokme.css?h=f05e4r', __FILE__));
-        wp_enqueue_style('bootstrap-cu-dokme');
-
-        wp_register_style('theme-bootstrap-cu-dokme', plugins_url('/assets/css/theme-bootstrap-cu-dokme.css?h=f05e4r', __FILE__));
-        wp_enqueue_style('theme-bootstrap-cu-dokme');
-
         wp_register_style('dokme-style', plugins_url('/assets/css/dokme-style.css?h=f05e4r', __FILE__));
         wp_enqueue_style('dokme-style');
-
         wp_enqueue_script('ajax-script', plugins_url('/assets/js/dokme_ajax.js?h=f05e4r', __FILE__), array('jquery'));
-
         wp_localize_script('ajax-script', 'ajax_object', array('ajax_url' => admin_url('admin-ajax.php'), 'we_value' => 1234));
     }
 
@@ -162,7 +153,7 @@ class Dokme
     public static function updateToken()
     {
         $status = update_site_option("DOKME_API_TOKEN", sanitize_text_field($_POST['token']));
-        $message = $status ? 'توکن با موفقیت به روز رسانی شد.' : 'مقدار توکن جدید با توکن ذخیره شده برابر میباشد.';
+        $message = $status ? '<p>توکن با موفقیت به روز رسانی شد.</p>' : '<p>مقدار توکن جدید با توکن ذخیره شده برابر میباشد.</p>';
 
         echo json_encode(array('status' => $status, 'message' => $message));
         wp_die();
@@ -199,7 +190,7 @@ class Dokme
 
     public static function syncAllProducts()
     {
-        $result = array('status' => false, 'code' => 401, 'message' => 'وارد کردن توکن الزامی میباشد.');
+        $result = array('status' => false, 'code' => 401, 'message' => '<p>وارد کردن توکن الزامی میباشد.</p>');
 
         $args = array(
             'order' => 'ASC',
@@ -225,7 +216,7 @@ class Dokme
     public static function selectedCategories()
     {
         $status = update_site_option("DOKME_SELECTED_CATEGORIES", $_POST['categories']);
-        $message = $status ? 'با موفقیت ذخیره شد.' : 'خطایی در ذخیره سازی وجود دارد.';
+        $message = $status ? '<p>با موفقیت ذخیره شد.</p>' : '<p>خطایی در ذخیره سازی وجود دارد.</p>';
 
         echo json_encode(array('status' => $status, 'message' => $message));
         wp_die();
