@@ -19,7 +19,7 @@
  * Tree
  */
 .dokme-tree ul {
-    list-style: cross-fade;
+    list-style: none;
     display: none;
     margin-bottom: 15px;
 }

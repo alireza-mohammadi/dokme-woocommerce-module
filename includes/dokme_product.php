@@ -17,7 +17,7 @@ class Dokme_Product
 
         $categories = dokme_array_selected($product->data['categories'], 'id');
         $selectedCategories = get_site_option('DOKME_SELECTED_CATEGORIES');
-        
+
         if (!empty($selectedCategories)) {
 
             $exist = dokme_is_exist($selectedCategories, $categories);
