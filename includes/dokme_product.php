@@ -110,98 +110,59 @@ class Dokme_Product
             return array();
         }
 
-        try {
-            //$variations = dokme_array_get($data, 'variations');
-            $attributes = dokme_array_get($data, 'attributes');
+        $lists = array();
+        foreach ($variations as $key => $variation) {
 
-            $listVariations = array();
-            foreach ($variations as $i => $data) {
+            // get attribute
+            $attributes = array();
+            $product = new WC_Product_Variation($variation['id']);
+            foreach ($product->get_variation_attributes() as $attribute_name => $attribute) {
+                $name = str_replace('attribute_', '', $attribute_name);
 
-                $discount = array();
-                if (!empty($data['sale_price'])) {
-                    $start_date = $data['date_on_sale_from'];
-                    $end_date = $data['date_on_sale_to'];
-
-                    $discount = array(
-                        'amount' => max($data['regular_price'] - $data['sale_price'], 0),
-                        'start_date' => !empty($start_date) ? date('Y-m-d H:i:s', strtotime($start_date)) : '0000-00-00 00:00:00',
-                        'end_date' => !empty($end_date) ? date('Y-m-d H:i:s', strtotime($end_date)) : '0000-00-00 00:00:00',
-                        'quantity' => 0,
-                        'tax' => 0,
-                        'type' => 0
-                    );
+                if (!$attribute) {
+                    continue;
                 }
 
-                if (count($data['attributes'])) {
-                    foreach ($attributes as $attribute) {
-                        $label = urldecode($data['attributes'][0]['name']);
-                        $value = $data['attributes'][0]['option'];
-
-                        if (count($attributes)) {
-                            foreach ($attribute['options'] as $option) {
-
-                                if ($value !== $option) {
-                                    continue;
-                                }
-
-                                $listVariations [] = array(
-                                    'code' => $data['id'],
-                                    'quantity' => $data['stock_quantity'],
-                                    'sku' => $data['sku'],
-                                    'price' => $data['regular_price'],
-                                    'discount' => $discount,
-                                    'default_value' => $i === 0 ? '1' : '0',
-                                    'variation' => array($data['id'] => array('label' => $attribute['name'], 'value' => $option))
-                                );
-                            }
-                        } else {
-                            if (($label === $attribute['name'])) {
-                                continue;
-                            }
-
-                            foreach ($attribute['options'] as $option) {
-                                $listVariations [] = array(
-                                    'code' => $data['id'],
-                                    'quantity' => $data['stock_quantity'],
-                                    'sku' => $data['sku'],
-                                    'price' => $data['regular_price'],
-                                    'discount' => $discount,
-                                    'default_value' => $i === 0 ? '1' : '0',
-                                    'variation' => array(
-                                        array('label' => $attribute['name'], 'value' => $option),
-                                        array('label' => $label, 'value' => $value)
-                                    )
-                                );
-                            }
-                        }
-                    }
-                } else {
-                    $temp = array();
-                    $values = dokme_array_get($data, 'attributes');
-
-                    foreach ($values as $key => $value) {
-                        $temp [] = array(
-                            'label' => urldecode($value['name']),
-                            'value' => urldecode($value['option'])
-                        );
-                    }
-
-                    $listVariations [] = array(
-                        'code' => $data['id'],
-                        'quantity' => $data['stock_quantity'],
-                        'sku' => $data['sku'],
-                        'price' => $data['regular_price'],
-                        'discount' => $discount,
-                        'default_value' => $i === 0 ? '1' : '0',
-                        'variation' => $temp
+                if (0 === strpos($attribute_name, 'attribute_pa_')) {
+                    $option_term = get_term_by('slug', $attribute, $name);
+                    $attributes[] = array(
+                        'label' => $this->get_attribute_taxonomy_label($name),
+                        'value' => $option_term && !is_wp_error($option_term) ? $option_term->name : ($attribute),
                     );
+                } else {
+                    $attributes[] = array('label' => urldecode($name), 'value' => ($attribute));
                 }
             }
 
-            return $listVariations;
-        } catch (Exception $exc) {
+            // get discount
+            $discount = array();
+            if (!empty($data['sale_price'])) {
+                $start_date = $data['date_on_sale_from'];
+                $end_date = $data['date_on_sale_to'];
 
+                $discount = array(
+                    'amount' => max($data['regular_price'] - $data['sale_price'], 0),
+                    'start_date' => !empty($start_date) ? date('Y-m-d H:i:s', strtotime($start_date)) : '0000-00-00 00:00:00',
+                    'end_date' => !empty($end_date) ? date('Y-m-d H:i:s', strtotime($end_date)) : '0000-00-00 00:00:00',
+                    'quantity' => 0,
+                    'tax' => 0,
+                    'type' => 0
+                );
+            }
+
+            // set array
+            $lists [] = array(
+                'code' => $variation['id'],
+                'quantity' => $variation['stock_quantity'],
+                'sku' => $variation['sku'],
+                'price' => $variation['regular_price'],
+                'discount' => $discount,
+                'default_value' => $key === 0 ? 1 : 0,
+                'variation' => $attributes
+            );
         }
+
+        return $lists;
     }
 
 }
