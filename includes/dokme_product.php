@@ -126,7 +126,7 @@ class Dokme_Product
                 if (0 === strpos($attribute_name, 'attribute_pa_')) {
                     $option_term = get_term_by('slug', $attribute, $name);
                     $attributes[] = array(
-                        'label' => $this->get_attribute_taxonomy_label($name),
+                        'label' => self::get_attribute_taxonomy_label($name),
                         'value' => $option_term && !is_wp_error($option_term) ? $option_term->name : ($attribute),
                     );
                 } else {
@@ -163,6 +163,14 @@ class Dokme_Product
         }
 
         return $lists;
+    }
+
+    public static function get_attribute_taxonomy_label($name)
+    {
+        $tax = get_taxonomy($name);
+        $labels = get_taxonomy_labels($tax);
+
+        return $labels->singular_name;
     }
 
 }
