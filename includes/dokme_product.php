@@ -127,10 +127,13 @@ class Dokme_Product
                     $option_term = get_term_by('slug', $attribute, $name);
                     $attributes[] = array(
                         'label' => self::get_attribute_taxonomy_label($name),
-                        'value' => $option_term && !is_wp_error($option_term) ? $option_term->name : ($attribute),
+                        'value' => $option_term && !is_wp_error($option_term) ? $option_term->name : urldecode($attribute),
                     );
                 } else {
-                    $attributes[] = array('label' => urldecode($name), 'value' => ($attribute));
+                    $attributes[] = array(
+                        'label' => urldecode($name),
+                        'value' => urldecode($attribute)
+                    );
                 }
             }
 
