@@ -139,12 +139,12 @@ class Dokme_Product
 
             // get discount
             $discount = array();
-            if (!empty($data['sale_price'])) {
-                $start_date = $data['date_on_sale_from'];
-                $end_date = $data['date_on_sale_to'];
+            if (!empty($variation['sale_price'])) {
+                $start_date = $variation['date_on_sale_from'];
+                $end_date = $variation['date_on_sale_to'];
 
                 $discount = array(
-                    'amount' => max($data['regular_price'] - $data['sale_price'], 0),
+                    'amount' => max($variation['regular_price'] - $variation['sale_price'], 0),
                     'start_date' => !empty($start_date) ? date('Y-m-d H:i:s', strtotime($start_date)) : '0000-00-00 00:00:00',
                     'end_date' => !empty($end_date) ? date('Y-m-d H:i:s', strtotime($end_date)) : '0000-00-00 00:00:00',
                     'quantity' => 0,
