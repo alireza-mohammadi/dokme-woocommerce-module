@@ -31,6 +31,13 @@ jQuery(function() {
 
         selectedCategories(categories);
     });
+
+    $('input').on('click', function(e) {
+        var $checkbox = $(this).closest('li');
+        if ($checkbox.has('ul')) {
+            $checkbox.find(':checkbox').not(this).prop('checked', this.checked);
+        }
+    });
     function updateToken() {
         var token = jQuery('#dokme-api-token').val();
         if (token) {
