@@ -70,17 +70,29 @@ class Dokme_SendRequest
         $apiToken = get_site_option('DOKME_API_TOKEN');
         if ($apiToken) {
 
-            $args = array(
-                'method' => $method,
-                'body' => $body,
-                'headers' => array(
-                    'Authorization' => "Bearer $apiToken",
-                    'User-Agent' => 'WordPress_Module_2.0.0'
-                ),
-            );
-            $response = wp_remote_request("http://dokme.com/api/v1/public/$url", $args);
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
-            switch ($response['response']['code']) {
+            curl_setopt($curl, CURLOPT_URL, "http://dokme.com/api/v1/public/$url");
+
+            curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+
+            if ($body != null) {
+                curl_setopt($curl, CURLOPT_POSTFIELDS, $body);
+            }
+
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+                "Authorization:Bearer $apiToken",
+                "User-Agent:WordPress_Module_2.0.0"
+                )
+            );
+
+            $response = curl_exec($curl);
+            //file_put_contents(__DIR__ . '/log/response.txt', json_encode($response), FILE_APPEND);
+
+            $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            switch ($httpcode) {
                 case 200:
                     return array('status' => true, 'message' => '<p>ارسال به دکمه با موفقیت انجام شد.</p>');
                 case 401:
@@ -93,7 +105,7 @@ class Dokme_SendRequest
                 case 0:
                     return array('status' => false, 'code' => 429, 'message' => '<p>فرایند ارسال محصولات به طول می انجامد لطفا صبور باشید.</p>');
                 default:
-                    return array('status' => false, 'message' => '<p>error: ' . $response['response']['code'] . '</p>');
+                    return array('status' => false, 'message' => '<p>error: ' . $httpcode . '</p>');
             }
         }
         return array('status' => false, 'message' => '<p>وارد کردن توکن الزامی میباشد.</p>');
