@@ -49,7 +49,7 @@ class Dokme_Product
             'long_content' => dokme_array_get($product->data, 'description'),
             'meta_keywords' => '',
             'meta_description' => '',
-            'image' => array_pop($image),
+            'image' => array_shift($image),
             'images' => $image,
             'attributes' => self::_getAttributes($product->data),
             'variants' => self::_getVariations($product->data),
