@@ -124,12 +124,12 @@ class Dokme
 
     public static function updateProduct($postId, $post_after)
     {
-        if ($post_after->post_type !== 'product') {
+        if ($post_after->post_type != 'product') {
             return;
         }
 
         $sendRequest = new Dokme_SendRequest();
-        if ($post_after->post_status === 'publish') {
+        if ($post_after->post_status == 'publish') {
             $sendRequest->syncProduct(array($postId));
         } else {
             $sendRequest->deleteProducts($postId);
@@ -139,7 +139,17 @@ class Dokme
 
     public static function updateStock($product)
     {
-        $this->updateProduct($product->id, $product);
+        if ($product->post_type != 'product') {
+            return;
+        }
+
+        $sendRequest = new Dokme_SendRequest();
+        if ($product->status == 'publish') {
+            $sendRequest->syncProduct(array($product->id));
+        } else {
+            $sendRequest->deleteProducts($product->id);
+            Dokme_Dbsync::update($product->id);
+        }
     }
 
     public static function updateToken()
