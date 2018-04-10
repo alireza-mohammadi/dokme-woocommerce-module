@@ -31,6 +31,11 @@ class Dokme_Product
             $price = dokme_array_get($product->data, 'price');
         }
 
+        $available_for_order = 1;
+        if (!dokme_array_get($product->data, 'in_stock')) {
+            $available_for_order = 0;
+        }
+
         $image = dokme_array_selected($product->data['images'], 'src');
 
         $productArray = array(
@@ -53,7 +58,7 @@ class Dokme_Product
             'images' => $image,
             'attributes' => self::_getAttributes($product->data),
             'variants' => self::_getVariations($product->data),
-            'available_for_order' => 1,
+            'available_for_order' => $available_for_order,
             'out_of_stock' => dokme_array_get($product->data, 'in_stock'),
             'tags' => dokme_array_selected($product->data['tags'], 'name')
         );
