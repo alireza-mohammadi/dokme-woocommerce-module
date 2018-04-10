@@ -25,7 +25,7 @@ class Dokme
     {
         add_action('admin_menu', array('Dokme', 'DokmeAdminMenu'));
         add_action('admin_enqueue_scripts', array('Dokme', 'registerStyleScript'));
-        add_action('save_post_product', array('Dokme', 'updateProduct'), 30, 2);
+        add_action('save_post', array('Dokme', 'updateProduct'), 30, 2);
         add_action('woocommerce_product_set_stock', array('Dokme', 'updateStock'), 30, 1);
         add_action('trashed_post', array('Dokme', 'deleteProduct'), 30, 1);
         add_action('create_product_cat', array('Dokme', 'addCategories'), 10, 1);

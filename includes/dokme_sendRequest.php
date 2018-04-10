@@ -76,20 +76,19 @@ class Dokme_SendRequest
             curl_setopt($curl, CURLOPT_URL, "http://dokme.com/api/v1/public/$url");
 
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
             if ($body != null) {
                 curl_setopt($curl, CURLOPT_POSTFIELDS, $body);
             }
 
             curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-                "Authorization:Bearer $apiToken",
-                "User-Agent:WordPress_Module_2.0.2"
+                    "Authorization:Bearer $apiToken",
+                    "User-Agent:WordPress_Module_2.0.3"
                 )
             );
 
-            $response = curl_exec($curl);
-            //file_put_contents(__DIR__ . '/log/response.txt', json_encode($response), FILE_APPEND);
+            curl_exec($curl);
 
             $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
             switch ($httpcode) {
