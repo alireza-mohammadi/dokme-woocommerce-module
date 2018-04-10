@@ -1,3 +1,19 @@
+# IDE and editor specific files #
+/nbproject
+.idea
+
+# OS generated files #
+.directory
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+
+#
 *.log
 wp-config.php
 wp-content/advanced-cache.php
