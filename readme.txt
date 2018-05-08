@@ -35,6 +35,8 @@ You can read complete documentations on the [dokme.com](http://dokme.com)
 2. screenshot-2.png
 
 == Changelog ==
+= 2.0.4 =
+check ssl
 = 2.0.3 =
 *رفع خطا ارسال قیمت های کالا
 = 2.0.2 =
