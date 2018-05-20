@@ -7,5 +7,15 @@ CREATE TABLE IF NOT EXISTS `PREFIX_dokme_sync` (
       PRIMARY KEY (`id`),
       UNIQUE INDEX `product_id_UNIQUE` (`product_id` ASC))DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `PREFIX_dokme_synchronize`(
+            `id` BIGINT NOT NULL AUTO_INCREMENT,
+            `product_id` BIGINT NOT NULL,
+            `date_sync` DATETIME NULL,
+             PRIMARY KEY(`id`),
+             UNIQUE INDEX `product_id_UNIQUE` (`product_id` ASC))DEFAULT CHARSET=utf8;
+
 INSERT IGNORE INTO `PREFIX_dokme_sync` (`product_id`,`status`)
-      SELECT id AS `product_id`,'ارسال نشد' AS `status` FROM  `PREFIX_posts` WHERE post_type="product" AND post_status="publish";
+      SELECT id AS `product_id`,'ارسال نشد' AS `status` FROM  `PREFIX_posts` WHERE post_type='product' AND post_status='publish';
+
+INSERT IGNORE INTO `PREFIX_dokme_synchronize` (`product_id`)
+      SELECT id AS `product_id` FROM `PREFIX_posts` WHERE post_type='product' AND post_status='publish';

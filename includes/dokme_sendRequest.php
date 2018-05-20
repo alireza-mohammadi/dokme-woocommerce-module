@@ -73,7 +73,7 @@ class Dokme_SendRequest
             $curl = curl_init();
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
-            curl_setopt($curl, CURLOPT_URL, "https://dokme.com/api/v1/public/$url");
+            curl_setopt($curl, CURLOPT_URL, "http://dokme.test/api/v1/public/$url");
 
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
@@ -101,8 +101,9 @@ class Dokme_SendRequest
                 case 408:
                     return array('status' => false, 'message' => '<p>خطا! درخواست منقضی شده است.</p>');
                 case 429:
-                case 0:
                     return array('status' => false, 'code' => 429, 'message' => '<p>فرایند ارسال محصولات به طول می انجامد لطفا صبور باشید.</p>');
+                case 0:
+                    return array('status' => false, 'code' => 0, 'message' => '<p>فراید ارسال محصولات با خطا روبه‌رو شده است.</p>');
                 default:
                     return array('status' => false, 'message' => '<p>error: ' . $httpcode . '</p>');
             }
