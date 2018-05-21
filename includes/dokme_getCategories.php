@@ -38,7 +38,11 @@ class dokme_getCategories
 
         $out = '<ul>';
         foreach ($categories as $category) {
-            $checked = in_array($category['term_id'], $selectedCategories) ? 'checked' : '';
+            $checked = '';
+            if (!empty($selectedCategories)) {
+                $checked = in_array($category['term_id'], $selectedCategories) ? 'checked' : '';
+            }
+
             $hasChildren = !empty($category['children']);
 
             $out .= sprintf('<li><input type="checkbox" value="%d" %s><i class=collapse></i><span class=collapse>%s</span>', $category['term_id'], $checked, $category['name']);
