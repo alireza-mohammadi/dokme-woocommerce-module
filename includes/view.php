@@ -1,17 +1,4 @@
 <?php
-//$wcRestProducts = new WC_REST_Products_V1_Controller();
-//$product = $wcRestProducts->prepare_item_for_response(5739, 'GET');
-//file_put_contents(__DIR__ . '/log/5739.txt', json_encode($product));
-
-//$this->define('WC_ABSPATH', dirname(WC_PLUGIN_FILE) . '/');
-//    $args = array(
-//        'posts_per_page' => -1,
-//        'post_type' => 'product',
-//        'post_status' => 'publish'
-//    );
-//    $query = new WP_Query($args);
-//    $count = $query->post_count;
-
 $countPost = wp_count_posts('product', '');
 $count = $countPost->publish;
 
@@ -29,7 +16,7 @@ file_put_contents(__DIR__ . '/log/count.txt', json_encode($countPost));
                     تنظیمات ماژول دکمه
                 </td>
                 <td width="50%" style="padding-left:35px">
-                    <a href="https://dokme.ir/" style="float: left">
+                    <a href="https://dokme.com/" style="float: left">
                         <img src="<?php echo plugins_url('../assets/images/logo.png', __FILE__) ?>">
                     </a>
                 </td>
@@ -40,7 +27,9 @@ file_put_contents(__DIR__ . '/log/count.txt', json_encode($countPost));
 <div style="margin-bottom: 30px;">
     <div style="width: 90%; margin: auto; max-width: 100%;">
         <ul>
-            <li>ابتدا توکن خود را از سایت <a href="https://dokme.com" target="_blank" title="دکمه - شبکه اجتماعی خرید">دکمه</a> دریافت کنید.</li>
+            <li>ابتدا توکن خود را از سایت <a href="https://dokme.com" target="_blank" title="دکمه - شبکه اجتماعی خرید">دکمه</a>
+                دریافت کنید.
+            </li>
             <li>در صورت بروز هر گونه خطا ابتدا از صحت توکن خود اطمینان حاصل کنید.</li>
             <li>کالاهای شما بعد از دریافت تصاویر در سایت دکمه قابل مشاهده میباشند.</li>
             <li>در صورت بروز هر گونه مشکل یا ابهامی می‌توانید با کارشناسان ما در ارتباط باشید.</li>
@@ -62,8 +51,8 @@ file_put_contents(__DIR__ . '/log/count.txt', json_encode($countPost));
                             <td>
                                 <input type="text"
                                        id="dokme-api-token"
-                                       placeholder = "توکن دریافتی خود از دکمه را وارد کنید"
-                                       value = "<?php echo get_site_option("DOKME_API_TOKEN") ?>">
+                                       placeholder="توکن دریافتی خود از دکمه را وارد کنید"
+                                       value="<?php echo get_site_option("DOKME_API_TOKEN") ?>">
                             </td>
                             <td align="left">
                                 <button type="button" id="updateToken" class="dokme-btn">ذخیره</button>
@@ -95,6 +84,19 @@ file_put_contents(__DIR__ . '/log/count.txt', json_encode($countPost));
                                         id="syncAllProducts">
                                     ارسال
                                 </button>
+                            </td>
+                        </tr>
+                    </table>
+                    <hr>
+                    <table width="100%" style="margin-bottom: 50px;">
+                        <tr>
+                            <td> ۴: کلید فراخوانی کالاها توسط دکمه این کلید را در تیکت برای ما ارسال کنید</td>
+                            <td>
+                                <input type="text"
+                                       readonly
+                                       id="seller-token"
+                                       placeholder="کلید فراخوانی کالاها توسط دکمه"
+                                       value="<?php echo get_site_option("SELLER_TOKEN") ?>">
                             </td>
                         </tr>
                     </table>

@@ -1,4 +1,4 @@
-.dokme-btn{
+.dokme-btn {
     display: inline-block;
     padding: 5px;
     background: #469A46;
@@ -12,8 +12,11 @@
     font-size: 12px;
     cursor: pointer;
 }
-#dokme-api-token{
+
+#dokme-api-token, #seller-token {
     width: 100%;
+    border-radius: 5px;
+    padding: 10px;
 }
 
 /*
@@ -24,25 +27,31 @@
     display: none;
     margin-bottom: 15px;
 }
+
 .dokme-tree > ul {
     padding-right: 5px;
     display: block;
 }
+
 .dokme-tree ul li i {
     font-size: 14px;
     margin: 0 4px;
     cursor: pointer;
 }
+
 .dokme-tree li > i:before {
     content: '+';
 }
+
 .dokme-tree li.open > i:before {
     content: '-';
 }
+
 .dokme-tree li.open > ul {
     display: block;
     padding-right: 15px;
 }
+
 /*
  * ProgressBar
  */
@@ -54,11 +63,13 @@
     margin: 2px 0;
 
 }
+
 .dokme-progress-bar span {
     display: inline-block;
     float: right;
     height: 100%;
 }
+
 .blue span {
     background-color: #34c2e3;
 }
