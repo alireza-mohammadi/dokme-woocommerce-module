@@ -34,7 +34,39 @@ class Dokme
 
     public static function plugin_activation()
     {
-        self::loadSQLFile(plugins_url('/includes/sql/install.sql', __FILE__));
+        global $wpdb;
+
+        $query = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}dokme_sync`(
+                  `id` INT NOT NULL AUTO_INCREMENT,
+                  `product_id` INT NOT NULL,
+                  `status` INT NOT NULL DEFAULT 0,
+                  `created_at` DATETIME NULL,
+                  `updated_at` DATETIME NULL,
+                  PRIMARY KEY(`id`),
+                  UNIQUE INDEX `product_id_UNIQUE`(`product_id` ASC)
+                  )";
+
+        $wpdb->query($query);
+
+        $query = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}dokme_synchronize`(
+                  `id` BIGINT NOT NULL AUTO_INCREMENT,
+                  `product_id` BIGINT NOT NULL,
+                  `date_sync` DATETIME NOT NULL,
+                  PRIMARY KEY(`id`),
+                  UNIQUE INDEX `product_id_UNIQUE`(`product_id` ASC)
+                  )";
+        $wpdb->query($query);
+
+        $query = "INSERT IGNORE INTO `{$wpdb->prefix}dokme_sync`(`product_id`)
+                  SELECT id AS `product_id` FROM `{$wpdb->prefix}posts` 
+                  WHERE post_type = 'product' AND post_status = 'publish'";
+        $wpdb->query($query);
+
+        $query = "INSERT IGNORE INTO `{$wpdb->prefix}dokme_synchronize`(`product_id`)
+                  SELECT id AS `product_id` FROM `{$wpdb->prefix}posts`
+                  WHERE post_type = 'product' AND post_status = 'publish'";
+        $wpdb->query($query);
+
         update_site_option('Dokme_API_TOKEN', '');
     }
 
@@ -43,21 +75,9 @@ class Dokme
         global $wpdb;
         $query = "DROP TABLE {$wpdb->prefix}dokme_sync";
         $wpdb->query($query);
-    }
 
-    public static function loadSQLFile($sqlFile)
-    {
-        global $wpdb;
-
-        $getContent = file_get_contents($sqlFile);
-        $replaceContent = str_replace('PREFIX_', $wpdb->prefix, $getContent);
-        $sqlRequests = preg_split('/;\s*[\r\n]+/', $replaceContent);
-
-        foreach ($sqlRequests as $request) {
-            if (mb_strlen($request) > 0) {
-                $wpdb->query($request);
-            }
-        }
+        $query = "DROP TABLE {$wpdb->prefix}dokme_synchronize";
+        $wpdb->query($query);
     }
 
     public static function DokmeAdminMenu()

@@ -1,1 +1,0 @@
-DROP TABLE IF EXISTS `PREFIX_dokme_sync`;
