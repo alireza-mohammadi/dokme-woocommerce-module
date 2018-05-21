@@ -12,7 +12,18 @@ class DokmeApiProduct
             return;
         }
 
+        $tblPost = $wpdb->prefix . 'posts';
         $tblSynchronize = $wpdb->prefix . 'dokme_synchronize';
+
+        $query = "SELECT `$tblPost`.`ID` FROM `$tblPost` 
+                  WHERE `$tblPost`.`post_type` = 'product' 
+                  AND `$tblPost`.`post_status` = 'publish'
+                  AND `$tblPost`.`ID` = '$id'";
+
+        $result = $wpdb->get_row($query);
+        if (empty($result)) {
+            return;
+        }
 
         $product = Dokme_Product::getProductDetail($id);
         echo(json_encode(
