@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_dokme_sync` (
 CREATE TABLE IF NOT EXISTS `PREFIX_dokme_synchronize`(
             `id` BIGINT NOT NULL AUTO_INCREMENT,
             `product_id` BIGINT NOT NULL,
-            `date_sync` DATETIME NULL,
+            `date_sync` DATETIME NOT NULL,
              PRIMARY KEY(`id`),
              UNIQUE INDEX `product_id_UNIQUE` (`product_id` ASC))DEFAULT CHARSET=utf8;
 

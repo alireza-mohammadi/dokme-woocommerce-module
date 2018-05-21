@@ -1,9 +1,6 @@
 <?php
 require_once '../../../wp-load.php';
-require_once 'includes/dokme_sendRequest.php';
-include_once 'includes/dokme_productsList.php';
-include_once 'includes/model/dokme_dbsync.php';
-include_once 'includes/dokme_getCategories.php';
+require_once 'includes/dokme_product.php';
 
 syncAllProducts();
 
@@ -21,6 +18,7 @@ function syncAllProducts()
               GROUP BY `$tblPost`.`ID` LIMIT 100";
 
     $ids = $wpdb->get_results($query);
+
     if (empty($ids)) {
         return;
     }
@@ -30,13 +28,19 @@ function syncAllProducts()
         $items[] = $id->ID;
     }
 
-    $apiToken = get_site_option('DOKME_API_TOKEN');
-    if (empty($apiToken)) {
-        return;
+    $products = array();
+    foreach ($items as $item) {
+        $result = Dokme_Product::getProductDetail($item);
+
+        if (empty($result)) {
+            continue;
+        }
+
+        $products[] = $result;
     }
 
-    $sendRequest = new Dokme_SendRequest();
-    $result      = $sendRequest->syncProduct($items);
+    print_r(json_encode($products));
+
     if ($result['status']) {
         $time  = date('Y-m-d H:i:s');
         $items = implode(',', $items);
