@@ -42,7 +42,7 @@ class Dokme_Dbsync
             return;
         }
 
-        $query = "UPDATE {$wpdb->prefix}dokme_sync SET `status`='ارسال شد',`updated_at`='" . date("Y-m-d H:i:s") . "' WHERE product_id=$ids";
+        $query = "UPDATE {$wpdb->prefix}dokme_sync SET `status`= 1,`updated_at`='" . date("Y-m-d H:i:s") . "' WHERE product_id=$ids";
 
         $wpdb->query($query);
     }
