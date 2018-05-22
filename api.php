@@ -1,25 +1,22 @@
 <?php
 require_once 'dokmeApi.php';
-require_once 'dokmeApiProduct.php';
-require_once 'dokmeApiProducts.php';
-require_once 'dokmeApiCategories.php';
 
 $api = new DokmeApi();
-if (!$api->checkToken()) {
-    return;
-}
+if ($api->checkToken()) {
 
-if (isset($_GET) && $_SERVER['QUERY_STRING'] === 'products') {
-    $products = DokmeApiProducts::getProducts();
-    return;
-}
+    if (isset($_GET['products'])) {
+        $data = $api->getProducts();
+    } elseif (isset($_GET['product'])) {
+        $data = $api->getProduct((int)$_GET['product']);
+    } elseif (isset($_GET['categories'])) {
+        $data = $api->getCategories();
+    }
 
-if (isset($_GET['product'])) {
-    $products = DokmeApiProduct::getProduct($_GET['product']);
-    return;
-}
+    echo(json_encode(
+        array(
+            'status' => true,
+            'data' => $data
+        )
+    ));
 
-if (isset($_GET) && $_SERVER['QUERY_STRING'] === 'categories') {
-    $categories = DokmeApiCategories::getCategories();
-    return;
 }
