@@ -87,19 +87,19 @@ file_put_contents(__DIR__ . '/log/count.txt', json_encode($countPost));
                             </td>
                         </tr>
                     </table>
-                    <hr>
-                    <table width="100%" style="margin-bottom: 50px;">
-                        <tr>
-                            <td> ۴: کلید فراخوانی کالاها توسط دکمه این کلید را در تیکت برای ما ارسال کنید</td>
-                            <td>
-                                <input type="text"
-                                       readonly
-                                       id="seller-token"
-                                       placeholder="کلید فراخوانی کالاها توسط دکمه"
-                                       value="<?php echo get_site_option("SELLER_TOKEN") ?>">
-                            </td>
-                        </tr>
-                    </table>
+<!--                    <hr>-->
+<!--                    <table width="100%" style="margin-bottom: 50px;">-->
+<!--                        <tr>-->
+<!--                            <td> ۴: کلید فراخوانی کالاها توسط دکمه این کلید را در تیکت برای ما ارسال کنید</td>-->
+<!--                            <td>-->
+<!--                                <input type="text"-->
+<!--                                       readonly-->
+<!--                                       id="seller-token"-->
+<!--                                       placeholder="کلید فراخوانی کالاها توسط دکمه"-->
+<!--                                       value="--><?php //echo get_site_option("SELLER_TOKEN") ?><!--">-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                    </table>-->
                 </td>
             </tr>
         </table>

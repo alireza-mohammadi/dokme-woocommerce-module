@@ -84,7 +84,7 @@ class Dokme_SendRequest
 
             curl_setopt($curl, CURLOPT_HTTPHEADER, array(
                     "Authorization:Bearer $apiToken",
-                    "User-Agent:WordPress_Module_2.0.4"
+                    "User-Agent:WordPress_Module_2.0.5"
                 )
             );
 
