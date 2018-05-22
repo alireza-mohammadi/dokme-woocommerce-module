@@ -2,21 +2,20 @@
 require_once 'dokmeApi.php';
 
 $api = new DokmeApi();
-if ($api->checkToken()) {
+if ($api->auth()) {
+
+    $data = array('status' => true);
 
     if (isset($_GET['products'])) {
-        $data = $api->getProducts();
+        $data['data'] = $api->getProducts();
     } elseif (isset($_GET['product'])) {
-        $data = $api->getProduct((int)$_GET['product']);
+        $data['data'] = $api->getProduct((int)$_GET['product']);
     } elseif (isset($_GET['categories'])) {
-        $data = $api->getCategories();
+        $data['data'] = $api->getCategories();
+    } elseif (isset($_GET['status'])) {
+        $data['status'] = $api->getStatus();
     }
 
-    echo(json_encode(
-        array(
-            'status' => true,
-            'data' => $data
-        )
-    ));
+    echo json_encode($data);
 
 }

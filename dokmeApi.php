@@ -4,7 +4,7 @@ require_once 'includes/dokme_product.php';
 
 class DokmeApi
 {
-    public function checkToken()
+    public function auth()
     {
         if (empty($_SERVER['HTTP_AUTHORIZATION'])) {
             echo $this->_response(403);
@@ -119,6 +119,12 @@ class DokmeApi
         return $data;
     }
 
+    public function getStatus()
+    {
+        $plugins = get_option('active_plugins');
+        return array_search('dokme/dokme.php', $plugins) !== false;
+    }
+
     protected function _response($status = null)
     {
         $message = array(
@@ -143,6 +149,5 @@ class DokmeApi
         $length = strlen($needle);
         return substr($haystack, 0, $length) === $needle;
     }
-
 
 }
