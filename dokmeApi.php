@@ -125,6 +125,18 @@ class DokmeApi
         return array_search('dokme/dokme.php', $plugins) !== false;
     }
 
+    public function setEmpty()
+    {
+        global $wpdb;
+
+        $tblSynchronize = $wpdb->prefix . 'dokme_synchronize';
+
+        $query = "UPDATE `$tblSynchronize` SET `date_sync`='0000-00-00 00:00:00'";
+        $wpdb->get_row($query);
+
+        return true;
+    }
+
     protected function _response($status = null)
     {
         $message = array(

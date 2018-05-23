@@ -14,8 +14,10 @@ if ($api->auth()) {
         $data['data'] = $api->getCategories();
     } elseif (isset($_GET['status'])) {
         $data['status'] = $api->getStatus();
+    } elseif (isset($_GET['empty'])) {
+        $data['status'] = $api->setEmpty();
     }
 
-    echo json_encode($data);
+    echo wp_send_json($data);
 
 }
