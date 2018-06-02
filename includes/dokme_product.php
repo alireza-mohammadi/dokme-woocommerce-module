@@ -26,9 +26,9 @@ class Dokme_Product
             }
         }
 
-        $price = dokme_array_get($product->data, 'regular_price');
+        $price = dokme_array_get($product->data, 'regular_price', 0);
         if (empty($price)) {
-            $price = dokme_array_get($product->data, 'price');
+            $price = dokme_array_get($product->data, 'price', 0);
         }
 
         $available_for_order = 1;
@@ -42,11 +42,11 @@ class Dokme_Product
             'name' => dokme_array_get($product->data, 'name'),
             'code' => dokme_array_get($product->data, 'id'),
             'sku' => dokme_array_get($product->data, 'sku'),
-            'price' => $price,
+            'price' => (float)$price,
             'sale_price' => dokme_array_get($product->data, 'sale_price'),
             'discount' => self::_getDiscounts($product->data),
             'quantity' => (int)dokme_array_get($product->data, 'stock_quantity', 0),
-            'weight' => dokme_array_get($product->data, 'weight'),
+            'weight' => (float)dokme_array_get($product->data, 'weight'),
             'original_url' => dokme_array_get($product->data, 'permalink'),
             'brand_id' => '',
             'categories' => $categories,
@@ -59,7 +59,7 @@ class Dokme_Product
             'attributes' => self::_getAttributes($product->data),
             'variants' => self::_getVariations($product->data),
             'available_for_order' => $available_for_order,
-            'out_of_stock' => dokme_array_get($product->data, 'in_stock'),
+            'out_of_stock' => (int)dokme_array_get($product->data, 'in_stock'),
             'tags' => dokme_array_selected($product->data['tags'], 'name')
         );
 
@@ -161,9 +161,9 @@ class Dokme_Product
             // set array
             $lists [] = array(
                 'code' => $variation['id'],
-                'quantity' => $variation['stock_quantity'],
+                'quantity' => (int)$variation['stock_quantity'],
                 'sku' => $variation['sku'],
-                'price' => $variation['regular_price'],
+                'price' => (float)$variation['regular_price'],
                 'discount' => $discount,
                 'default_value' => $key === 0 ? 1 : 0,
                 'variation' => $attributes
