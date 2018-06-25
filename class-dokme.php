@@ -137,7 +137,7 @@ class Dokme
         wp_enqueue_media();
         wp_register_style('dokme-style', plugins_url('/assets/css/dokme-style.css?h=f05f4', __FILE__));
         wp_enqueue_style('dokme-style');
-        wp_enqueue_script('ajax-script', plugins_url('/assets/js/dokme_ajax.js?h=f05f4', __FILE__), array('jquery'));
+        //wp_enqueue_script('ajax-script', plugins_url('/assets/js/dokme_ajax.js?h=f05f4', __FILE__), array('jquery'));
         wp_localize_script('ajax-script', 'ajax_object', array('ajax_url' => admin_url('admin-ajax.php'), 'we_value' => 1234));
     }
 

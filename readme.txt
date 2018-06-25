@@ -35,6 +35,10 @@ You can read complete documentations on the [dokme.com](http://dokme.com)
 2. screenshot-2.png
 
 == Changelog ==
+= 2.0.7 =
+fix bug
+= 2.0.6 =
+fix bug
 = 2.0.5 =
 fix bug
 = 2.0.4 =
@@ -50,6 +54,10 @@ check ssl
 
 
 == Upgrade Notice ==
+= 2.0.7 =
+رفع خطا‌های جزئی
+= 2.0.6 =
+رفع خطا‌های جزئی
 = 2.0.5 =
 رفع خطا‌های جزئی
 = 2.0.2 =
