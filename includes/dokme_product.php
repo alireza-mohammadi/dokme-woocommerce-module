@@ -3,7 +3,6 @@ include 'dokme_functions.php';
 
 class Dokme_Product
 {
-
     /**
      * در این تابع جزییات یک محصول برگشت داده میشود
      *
@@ -59,11 +58,19 @@ class Dokme_Product
             'attributes' => self::_getAttributes($product->data),
             'variants' => self::_getVariations($product->data),
             'available_for_order' => $available_for_order,
-            'out_of_stock' => (int)dokme_array_get($product->data, 'in_stock'),
+            'out_of_stock' => self::_checkOutOfStock($product->data),
             'tags' => dokme_array_selected($product->data['tags'], 'name')
         );
 
         return $productArray;
+    }
+
+    public static function get_attribute_taxonomy_label($name)
+    {
+        $tax = get_taxonomy($name);
+        $labels = get_taxonomy_labels($tax);
+
+        return $labels->singular_name;
     }
 
     public static function _getDiscounts(array $data)
@@ -142,6 +149,14 @@ class Dokme_Product
                 }
             }
 
+            // check out of stock
+            $quantity = 0;
+            if ($variation['manage_stock'] && $variation['in_stock']) {
+                $quantity = $variation['stock_quantity'] > 0 ? $variation['stock_quantity'] : 50;
+            } elseif ($variation['in_stock']) {
+                $quantity = 50;
+            }
+
             // get discount
             $discount = array();
             if (!empty($variation['sale_price'])) {
@@ -161,7 +176,7 @@ class Dokme_Product
             // set array
             $lists [] = array(
                 'code' => $variation['id'],
-                'quantity' => (int)$variation['stock_quantity'],
+                'quantity' => $quantity,
                 'sku' => $variation['sku'],
                 'price' => (float)$variation['regular_price'],
                 'discount' => $discount,
@@ -173,12 +188,13 @@ class Dokme_Product
         return $lists;
     }
 
-    public static function get_attribute_taxonomy_label($name)
+    public static function _checkOutOfStock(array $data)
     {
-        $tax = get_taxonomy($name);
-        $labels = get_taxonomy_labels($tax);
+        $variations = dokme_array_get($data, 'variations');
+        if (!empty($variations)) {
+            return 0;
+        }
 
-        return $labels->singular_name;
+        return (int)dokme_array_get($data, 'in_stock');
     }
-
 }

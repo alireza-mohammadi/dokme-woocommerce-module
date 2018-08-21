@@ -3,7 +3,6 @@ require_once 'dokmeApi.php';
 
 $api = new DokmeApi();
 if ($api->auth()) {
-
     $data = array('status' => true);
 
     if (isset($_GET['products'])) {
@@ -16,8 +15,9 @@ if ($api->auth()) {
         $data['status'] = $api->getStatus();
     } elseif (isset($_GET['empty'])) {
         $data['status'] = $api->setEmpty();
+    } elseif (isset($_GET['reload'])) {
+        $data['status'] = $api->reloadDb();
     }
 
     echo wp_send_json($data);
-
 }

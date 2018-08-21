@@ -96,8 +96,90 @@ class Dokme
     {
         $list = new Dokme_ProductsList();
         $list->prepare_items();
+        ?>
+        <br/>
+        <div class="alert alert-dismissable" id="MessageBox" role="alert" hidden>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="col-sm-12">
+            <p>فقط کالاهایی به دکمه ارسال میشوند که در لیست انتخاب شده باشد.</p>
+            <form class="save-products" action="">
+                <?php echo $list->display() ?>
+                <button type="button" class="btn btn-success" id="save-products" hidden>ذخیره</button>
+                <button type="button" class="btn btn-success" id="remove-products">حذف از ارسال</button>
+            </form>
+        </div>
+        <script>
+            // jQuery('input').on('click', function (e) {
+            //     var $checkbox = $(this).closest('li');
+            //     if ($checkbox.has('ul')) {
+            //         $checkbox.find(':checkbox').not(this).prop('checked', this.checked);
+            //     }
+            // });
 
-        echo "<form method='post'><input type='hidden' name='page' value='" . $_REQUEST['page'] . "'/>" . $list->display() . "</form>";
+            jQuery('.save-products').on('click', function (e) {
+                var products = [];
+                jQuery('tbody input[type=checkbox]:checked').each(function (i) {
+                    products[i] = jQuery(this).val();
+                });
+                jQuery.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: ajaxurl,
+                    action: 'selectedProducts',
+                    data: {
+                        action: 'selectedProducts',
+                        products: products
+                    }
+                }).done(function (data) {
+                    if (data.status) {
+                        message(true, data.message);
+                    } else {
+                        message(false, data.message);
+                    }
+                }).fail(function () {
+
+                });
+            });
+
+            jQuery('#remove-products').on('click', function (e) {
+                var products = [];
+                jQuery('tbody input[type=checkbox]:checked').each(function (i) {
+                    products[i] = jQuery(this).val();
+                });
+                jQuery.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: ajaxurl,
+                    action: 'removeSelectedProducts',
+                    data: {
+                        action: 'removeSelectedProducts',
+                        products: products
+                    }
+                }).done(function (data) {
+                    if (data.status) {
+                        message(true, data.message);
+                    } else {
+                        message(false, data.message);
+                    }
+                }).fail(function () {
+
+                });
+            });
+
+            function message(status, message) {
+                jQuery('#MessageBox').show(5)
+                    .html(message)
+                    .removeClass('updated')
+                    .removeClass('error')
+                    .removeClass('update-nag')
+                    .addClass(status ? 'updated' : 'error');
+            }
+        </script>
+        <?php
+        //echo "<form method='post'><input type='hidden' name='page' value='", $_REQUEST['page'], "'/>", $list->display(), "</form>";
     }
 
     public static function dokmeCategory()
@@ -124,6 +206,50 @@ class Dokme
                 </div>
             </div>
         </div>
+        <script>
+            var messageBox = jQuery('#MessageBox');
+            jQuery('.dokme-tree .collapse').on('click', function (e) {
+                $(this).parent().toggleClass('open');
+            });
+            jQuery('#saveCategory').on('click', function () {
+                var categories = [];
+                jQuery('input[type=checkbox]:checked').each(function (i) {
+                    categories[i] = jQuery(this).val();
+                });
+
+                selectedCategories(categories);
+            });
+
+            function selectedCategories(categories) {
+                jQuery.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: ajaxurl,
+                    action: 'selectedCategories',
+                    data: {
+                        action: 'selectedCategories',
+                        categories: categories
+                    }
+                }).done(function (data) {
+                    if (data.status) {
+                        message(true, data.message);
+                    } else {
+                        message(false, data.message);
+                    }
+                }).fail(function () {
+
+                });
+            }
+
+            function message(status, message) {
+                messageBox.show(5)
+                    .html(message)
+                    .removeClass('updated')
+                    .removeClass('error')
+                    .removeClass('update-nag')
+                    .addClass(status ? 'updated' : 'error');
+            }
+        </script>
         <?php
     }
 
@@ -137,7 +263,6 @@ class Dokme
         wp_enqueue_media();
         wp_register_style('dokme-style', plugins_url('/assets/css/dokme-style.css?h=f05f4', __FILE__));
         wp_enqueue_style('dokme-style');
-        //wp_enqueue_script('ajax-script', plugins_url('/assets/js/dokme_ajax.js?h=f05f4', __FILE__), array('jquery'));
         wp_localize_script('ajax-script', 'ajax_object', array('ajax_url' => admin_url('admin-ajax.php'), 'we_value' => 1234));
     }
 
@@ -246,6 +371,40 @@ class Dokme
         $message = $status ? '<p>با موفقیت ذخیره شد.</p>' : '<p>خطایی در ذخیره سازی وجود دارد.</p>';
 
         echo json_encode(array('status' => $status, 'message' => $message));
+        wp_die();
+    }
+
+    public static function selectedProducts()
+    {
+        if ($_POST['products']) {
+            $items = get_site_option('DOKME_SELECTED_PRODUCTS');
+            if (empty($items)) {
+                $status = update_site_option("DOKME_SELECTED_PRODUCTS", $_POST['products']);
+            } else {
+                $ids = array_unique(array_merge($items, $_POST['products']), SORT_REGULAR);
+                $status = update_site_option("DOKME_SELECTED_PRODUCTS", $ids);
+            }
+
+            $message = $status ? '<p>با موفقیت ذخیره شد.</p>' : '<p>خطایی در ذخیره سازی وجود دارد.</p>';
+
+            echo json_encode(array('status' => $status, 'message' => $message));
+        }
+        wp_die();
+    }
+
+    public static function removeSelectedProducts()
+    {
+        if ($_POST['products']) {
+            $items = get_site_option('DOKME_SELECTED_PRODUCTS');
+            if (!empty($items)) {
+                $ids = array_diff($items, $_POST['products']);
+                $status = update_site_option("DOKME_SELECTED_PRODUCTS", $ids);
+            }
+
+            $message = $status ? '<p>با موفقیت از ارسال حذف شد.</p>' : '<p>خطایی در ذخیره سازی وجود دارد.</p>';
+
+            echo json_encode(array('status' => $status, 'message' => $message));
+        }
         wp_die();
     }
 

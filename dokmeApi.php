@@ -62,7 +62,7 @@ class DokmeApi
               LEFT JOIN `$tblSynchronize` ON  `$tblPost`.`ID` = `$tblSynchronize`.`product_id`
               WHERE `$tblPost`.`post_type` = 'product' AND `$tblPost`.`post_status` = 'publish' 
               AND `$tblPost`.`post_modified_gmt` > `$tblSynchronize`.`date_sync` 
-              GROUP BY `$tblPost`.`ID` LIMIT 100";
+              GROUP BY `$tblPost`.`ID` LIMIT 250";
 
         $ids = $wpdb->get_results($query);
 
@@ -135,6 +135,19 @@ class DokmeApi
         $wpdb->get_row($query);
 
         return true;
+    }
+
+    public function reloadDb()
+    {
+        global $wpdb;
+
+        $wpdb->query("DELETE FROM `{$wpdb->prefix}dokme_synchronize`");
+        $wpdb->query("ALTER TABLE `{$wpdb->prefix}dokme_synchronize` AUTO_INCREMENT = 1");
+
+        $query = "INSERT IGNORE INTO `{$wpdb->prefix}dokme_synchronize`(`product_id`)
+                  SELECT id AS `product_id` FROM `{$wpdb->prefix}posts`
+                  WHERE post_type = 'product' AND post_status = 'publish'";
+        $wpdb->query($query);
     }
 
     protected function _response($status = null)

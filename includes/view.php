@@ -92,7 +92,8 @@ file_put_contents(__DIR__ . '/log/count.txt', json_encode($countPost));
                         <tr>
                             <td>۴: کلید فراخوانی کالاها توسط دکمه.</td>
                             <td>
-                                <strong style="color: red">درصورت لزوم به شما اطلاع داده می‌شود کلید را برای ما در تیکت ارسال کنید.</strong>
+                                <strong style="color: red">درصورت لزوم به شما اطلاع داده می‌شود کلید را برای ما در تیکت
+                                    ارسال کنید.</strong>
                                 <input type="text"
                                        readonly
                                        id="seller-token"

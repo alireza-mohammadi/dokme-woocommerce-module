@@ -3,7 +3,7 @@
  * Plugin Name: Dokme
  * Plugin URI: https://dokme.com
  * Description: ارسال محصولات فروشگاه شما به <a href="https://dokme.com">دکمه</a>
- * Version: 2.0.7
+ * Version: 2.0.6
  * Author: AliRezaMohammadi
  * Author URI: https://github.com/ialireza
  * License: GPL
