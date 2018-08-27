@@ -437,7 +437,6 @@ class Dokme
 
     public static function selectedProducts()
     {
-        file_put_contents('/home/alireza/wp.txt', json_encode([]));
         if ($_POST['products']) {
             $items = get_site_option('DOKME_SELECTED_PRODUCTS');
             if (empty($items)) {
