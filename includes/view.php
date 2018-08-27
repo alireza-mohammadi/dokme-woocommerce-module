@@ -116,6 +116,47 @@ file_put_contents(__DIR__ . '/log/count.txt', json_encode($countPost));
         </tr>
     </table>
 </div>
+<style>
+    .dokme-btn {
+        display: inline-block;
+        padding: 5px;
+        background: #469A46;
+        color: #fff;
+        border: solid 1px #707070;
+        text-decoration: none;
+        text-align: center;
+        min-width: 80px;
+        border-radius: 50px;
+        font-weight: 400;
+        font-size: 12px;
+        cursor: pointer;
+    }
+
+    #dokme-api-token, #seller-token {
+        width: 100%;
+        border-radius: 5px;
+        padding: 10px;
+    }
+
+    .dokme-progress-bar {
+        background-color: #ccc;
+        height: 15px;
+        padding: 1px;
+        width: 100%;
+        margin: 2px 0;
+
+    }
+
+    .dokme-progress-bar span {
+        display: inline-block;
+        float: right;
+        height: 100%;
+    }
+
+    .blue span {
+        background-color: #34c2e3;
+    }
+</style>
 <script>
     jQuery(function () {
         var messageBox = jQuery('#MessageBox');

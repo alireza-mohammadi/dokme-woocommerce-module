@@ -42,12 +42,14 @@ class Dokme_ProductsList extends WP_List_Table
 
     function column_product_name($item)
     {
+        /*
         $actions = array(
             'send' => sprintf('<a href="?page=%s&paged=%s&action=%s&product=%s">ارسال</a>', $_REQUEST['page'], '', 'send', $item['product_id']),
             'delete' => sprintf('<a href="?page=%s&paged=%s&action=%s&product=%s">حذف</a>', $_REQUEST['page'], '', 'delete', $item['product_id'])
         );
 
         return sprintf('%1$s %2$s', $item['product_name'], $this->row_actions($actions));
+        */
     }
 
     function column_cb($item)
@@ -66,8 +68,8 @@ class Dokme_ProductsList extends WP_List_Table
             'id' => 'ایدی',
             'product_id' => 'شماره کالا',
             'product_name' => 'نام کالا',
-            'status' => 'وضعیت ارسال',
-            'updated_at' => 'تاریخ به‌روز‌رسانی'
+            //'status' => 'وضعیت ارسال',
+            //'updated_at' => 'تاریخ به‌روز‌رسانی'
         );
     }
 
@@ -86,11 +88,13 @@ class Dokme_ProductsList extends WP_List_Table
 
     function get_bulk_actions()
     {
+        /*
         $actions = array(
             'synchronize' => 'ارسال کالاها',
             'delete' => 'حذف کالاها',
         );
         return $actions;
+        */
     }
 
     function process_bulk_action()

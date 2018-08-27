@@ -73,7 +73,7 @@ class Dokme_SendRequest
             $curl = curl_init();
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
-            curl_setopt($curl, CURLOPT_URL, "https://dokme.com/api/v1/public/$url");
+            curl_setopt($curl, CURLOPT_URL, "http://dokme.test/api/v1/public/$url");
 
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);

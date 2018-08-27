@@ -27,6 +27,8 @@ $dokme = new Dokme(__FILE__);
 
 // Ajax Request
 add_action('wp_ajax_updateToken', array('Dokme', 'updateToken'));
-add_action('wp_ajax_syncAllCategories', array('Dokme', 'syncAllCategories'));
 add_action('wp_ajax_syncAllProducts', array('Dokme', 'syncAllProducts'));
+add_action('wp_ajax_selectedProducts', array('Dokme', 'selectedProducts'));
+add_action('wp_ajax_syncAllCategories', array('Dokme', 'syncAllCategories'));
 add_action('wp_ajax_selectedCategories', array('Dokme', 'selectedCategories'));
+add_action('wp_ajax_removeSelectedProducts', array('Dokme', 'removeSelectedProducts'));

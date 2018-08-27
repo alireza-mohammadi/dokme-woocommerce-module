@@ -6,7 +6,7 @@ if ($api->auth()) {
     $data = array('status' => true);
 
     if (isset($_GET['products'])) {
-        $data['data'] = $api->getProducts();
+        $data = array_merge($data, $api->getProducts($_GET['page']));
     } elseif (isset($_GET['product'])) {
         $data['data'] = $api->getProduct((int)$_GET['product']);
     } elseif (isset($_GET['categories'])) {

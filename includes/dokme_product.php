@@ -15,12 +15,13 @@ class Dokme_Product
         $product = $wcRestProducts->prepare_item_for_response($productId, 'GET');
 
         $categories = dokme_array_selected($product->data['categories'], 'id');
+
+        //
         $selectedCategories = get_site_option('DOKME_SELECTED_CATEGORIES');
-
-        if (!empty($selectedCategories)) {
-
+        $selectedProducts = get_site_option('DOKME_SELECTED_PRODUCTS');
+        if (!empty($selectedCategories) || !empty($selectedProducts)) {
             $exist = dokme_is_exist($selectedCategories, $categories);
-            if (!$exist) {
+            if (!$exist && !in_array($productId, $selectedProducts)) {
                 return;
             }
         }
@@ -42,7 +43,7 @@ class Dokme_Product
             'code' => dokme_array_get($product->data, 'id'),
             'sku' => dokme_array_get($product->data, 'sku'),
             'price' => (float)$price,
-            'sale_price' => dokme_array_get($product->data, 'sale_price'),
+            'sale_price' => (float)dokme_array_get($product->data, 'sale_price'),
             'discount' => self::_getDiscounts($product->data),
             'quantity' => (int)dokme_array_get($product->data, 'stock_quantity', 0),
             'weight' => (float)dokme_array_get($product->data, 'weight'),
@@ -58,7 +59,7 @@ class Dokme_Product
             'attributes' => self::_getAttributes($product->data),
             'variants' => self::_getVariations($product->data),
             'available_for_order' => $available_for_order,
-            'out_of_stock' => self::_checkOutOfStock($product->data),
+            'out_of_stock' => (int)dokme_array_get($product->data, 'in_stock'),
             'tags' => dokme_array_selected($product->data['tags'], 'name')
         );
 
@@ -90,7 +91,6 @@ class Dokme_Product
             'start_date' => !empty($start_date) ? date('Y-m-d H:i:s', strtotime($start_date)) : '0000-00-00 00:00:00',
             'end_date' => !empty($end_date) ? date('Y-m-d H:i:s', strtotime($end_date)) : '0000-00-00 00:00:00',
             'quantity' => 0,
-            'tax' => 0,
             'type' => 0
         );
 
@@ -118,12 +118,13 @@ class Dokme_Product
     public static function _getVariations(array $data)
     {
         $variations = dokme_array_get($data, 'variations');
+
         if (empty($variations)) {
             return array();
         }
 
         $lists = array();
-        foreach ($variations as $key => $variation) {
+        foreach ($variations as $variation) {
 
             // get attribute
             $attributes = array();
@@ -149,14 +150,6 @@ class Dokme_Product
                 }
             }
 
-            // check out of stock
-            $quantity = 0;
-            if ($variation['manage_stock'] && $variation['in_stock']) {
-                $quantity = $variation['stock_quantity'] > 0 ? $variation['stock_quantity'] : 50;
-            } elseif ($variation['in_stock']) {
-                $quantity = 50;
-            }
-
             // get discount
             $discount = array();
             if (!empty($variation['sale_price'])) {
@@ -168,7 +161,6 @@ class Dokme_Product
                     'start_date' => !empty($start_date) ? date('Y-m-d H:i:s', strtotime($start_date)) : '0000-00-00 00:00:00',
                     'end_date' => !empty($end_date) ? date('Y-m-d H:i:s', strtotime($end_date)) : '0000-00-00 00:00:00',
                     'quantity' => 0,
-                    'tax' => 0,
                     'type' => 0
                 );
             }
@@ -176,25 +168,15 @@ class Dokme_Product
             // set array
             $lists [] = array(
                 'code' => $variation['id'],
-                'quantity' => $quantity,
                 'sku' => $variation['sku'],
                 'price' => (float)$variation['regular_price'],
+                'quantity' => (int)$variation['stock_quantity'],
+                'out_of_stock' => (int)$variation['in_stock'],
                 'discount' => $discount,
-                'default_value' => $key === 0 ? 1 : 0,
                 'variation' => $attributes
             );
         }
 
         return $lists;
-    }
-
-    public static function _checkOutOfStock(array $data)
-    {
-        $variations = dokme_array_get($data, 'variations');
-        if (!empty($variations)) {
-            return 0;
-        }
-
-        return (int)dokme_array_get($data, 'in_stock');
     }
 }

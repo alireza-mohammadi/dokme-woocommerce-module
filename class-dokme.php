@@ -6,7 +6,6 @@ include_once 'includes/dokme_getCategories.php';
 
 class Dokme
 {
-
     private static $initiated = false;
 
     public function __construct($file)
@@ -104,26 +103,42 @@ class Dokme
             </button>
         </div>
         <div class="col-sm-12">
-            <p>فقط کالاهایی به دکمه ارسال میشوند که در لیست انتخاب شده باشد.</p>
+            <p style="text-align: center;font-size: 20px;color: #d0011b">فقط کالاهایی به دکمه ارسال میشوند که در لیست
+                انتخاب شده باشد.</p>
             <form class="save-products" action="">
                 <?php echo $list->display() ?>
                 <button type="button" class="btn btn-success" id="save-products" hidden>ذخیره</button>
-                <button type="button" class="btn btn-success" id="remove-products">حذف از ارسال</button>
+                <button type="button" class="dokme-btn-red" id="remove-products">&nbsp; حذف کالاهای انتخاب شده از ارسال
+                    &nbsp;
+                </button>
             </form>
         </div>
+        <style>
+            .dokme-btn-red {
+                display: inline-block;
+                padding: 10px;
+                background: #9a0012;
+                color: #fff;
+                text-decoration: none;
+                text-align: center;
+                min-width: 80px;
+                border-radius: 50px;
+                font-weight: 400;
+                font-size: 12px;
+                cursor: pointer
+            }
+        </style>
         <script>
-            // jQuery('input').on('click', function (e) {
-            //     var $checkbox = $(this).closest('li');
-            //     if ($checkbox.has('ul')) {
-            //         $checkbox.find(':checkbox').not(this).prop('checked', this.checked);
-            //     }
-            // });
-
-            jQuery('.save-products').on('click', function (e) {
+            var messageBox = jQuery('#MessageBox');
+            jQuery('input[type=checkbox]').on('click', function (e) {
                 var products = [];
                 jQuery('tbody input[type=checkbox]:checked').each(function (i) {
                     products[i] = jQuery(this).val();
                 });
+                selectedProducts(products);
+            });
+
+            function selectedProducts(products) {
                 jQuery.ajax({
                     type: 'POST',
                     dataType: 'json',
@@ -142,7 +157,7 @@ class Dokme
                 }).fail(function () {
 
                 });
-            });
+            }
 
             jQuery('#remove-products').on('click', function (e) {
                 var products = [];
@@ -170,7 +185,7 @@ class Dokme
             });
 
             function message(status, message) {
-                jQuery('#MessageBox').show(5)
+                messageBox.show(5)
                     .html(message)
                     .removeClass('updated')
                     .removeClass('error')
@@ -196,16 +211,62 @@ class Dokme
             <div class="panel panel-default">
                 <div class="panel-heading">دسته بندی های منتخب</div>
                 <div class="panel-body">
-                    <p>فقط کالاهایی به دکمه ارسال میشوند که در دسته بندی انتخاب شده باشد.</p>
+                    <p style="text-align: center;font-size: 20px;color: #d0011b">فقط کالاهایی به دکمه ارسال میشوند که در
+                        دسته بندی انتخاب شده باشد.</p>
                     <form class="save-category" action="">
                         <div class="dokme-tree">
                             <?php echo dokme_getCategories::traverse($categories) ?>
                         </div>
-                        <button type="button" class="btn btn-success" id="saveCategory">ذخیره</button>
+                        <button type="button" class="dokme-btn" id="saveCategory">ذخیره</button>
                     </form>
                 </div>
             </div>
         </div>
+        <style>
+            .dokme-tree ul {
+                list-style: none;
+                display: none;
+                margin-bottom: 15px
+            }
+
+            .dokme-tree > ul {
+                padding-right: 5px;
+                display: block
+            }
+
+            .dokme-tree ul li i {
+                font-size: 14px;
+                margin: 0 4px;
+                cursor: pointer
+            }
+
+            .dokme-tree li > i:before {
+                content: '+'
+            }
+
+            .dokme-tree li.open > i:before {
+                content: '-'
+            }
+
+            .dokme-tree li.open > ul {
+                display: block;
+                padding-right: 15px
+            }
+
+            .dokme-btn {
+                display: inline-block;
+                padding: 10px;
+                background: #9a0012;
+                color: #fff;
+                text-decoration: none;
+                text-align: center;
+                min-width: 80px;
+                border-radius: 50px;
+                font-weight: 400;
+                font-size: 12px;
+                cursor: pointer
+            }
+        </style>
         <script>
             var messageBox = jQuery('#MessageBox');
             jQuery('.dokme-tree .collapse').on('click', function (e) {
@@ -376,6 +437,7 @@ class Dokme
 
     public static function selectedProducts()
     {
+        file_put_contents('/home/alireza/wp.txt', json_encode([]));
         if ($_POST['products']) {
             $items = get_site_option('DOKME_SELECTED_PRODUCTS');
             if (empty($items)) {

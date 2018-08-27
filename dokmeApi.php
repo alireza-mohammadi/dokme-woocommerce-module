@@ -51,10 +51,19 @@ class DokmeApi
         return $product;
     }
 
-    public function getProducts()
+    public function getProducts($page)
     {
         global $wpdb;
 
+        $total = 100;
+        $data = array(
+            'total' => $this->getTotal(),
+            'per_page' => $total,
+            'current_page' => (int)$page,
+            'last_page' => ceil($this->getTotal() / $total)
+        );
+
+        $currentPage = ((int)$page - 1) * $total;
         $tblPost = $wpdb->prefix . 'posts';
         $tblSynchronize = $wpdb->prefix . 'dokme_synchronize';
 
@@ -62,7 +71,7 @@ class DokmeApi
               LEFT JOIN `$tblSynchronize` ON  `$tblPost`.`ID` = `$tblSynchronize`.`product_id`
               WHERE `$tblPost`.`post_type` = 'product' AND `$tblPost`.`post_status` = 'publish' 
               AND `$tblPost`.`post_modified_gmt` > `$tblSynchronize`.`date_sync` 
-              GROUP BY `$tblPost`.`ID` LIMIT 250";
+              GROUP BY `$tblPost`.`ID` LIMIT $total  OFFSET $currentPage";
 
         $ids = $wpdb->get_results($query);
 
@@ -91,7 +100,8 @@ class DokmeApi
         $query = "UPDATE `$tblSynchronize` SET `date_sync`='$time' WHERE `product_id` IN ($items)";
         $wpdb->get_results($query);
 
-        return $products;
+        $data['data'] = $products;
+        return $data;
     }
 
     public function getCategories()
@@ -173,6 +183,39 @@ class DokmeApi
     {
         $length = strlen($needle);
         return substr($haystack, 0, $length) === $needle;
+    }
+
+    protected function getTotal()
+    {
+        $selectedCategories = get_site_option('DOKME_SELECTED_CATEGORIES');
+        $selectedProducts = get_site_option('DOKME_SELECTED_PRODUCTS');
+
+        if (empty($selectedCategories) || empty($selectedProducts)) {
+            $args = array(
+                'order' => 'ASC',
+                'fields' => 'ids',
+                'post_type' => 'product',
+                'post_status' => 'publish'
+            );
+            $query = new WP_Query($args);
+            return count($query->query($args));
+        }
+
+        return count($selectedProducts) + $this->getCategoryCount($selectedCategories);
+    }
+
+    protected function getCategoryCount(array $input)
+    {
+        global $wpdb;
+
+        if (empty($input)) {
+            return 0;
+        }
+
+        $items = implode(',', $input);
+        $query = "SELECT $wpdb->term_taxonomy.count FROM $wpdb->terms, $wpdb->term_taxonomy WHERE $wpdb->terms.term_id=$wpdb->term_taxonomy.term_id AND $wpdb->term_taxonomy.term_id IN ($items)";
+
+        return $wpdb->get_var($query);
     }
 
 }
