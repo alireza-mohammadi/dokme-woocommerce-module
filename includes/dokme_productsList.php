@@ -83,8 +83,8 @@ class Dokme_ProductsList extends WP_List_Table
         $tp = $wpdb->prefix . 'posts';
 
         $query = "SELECT `ID` AS `product_id` ,`post_title` AS `name` FROM " . $tp . " WHERE " . $tp . ".`post_type` = 'product' AND " . $tp . ".`post_status` = 'publish'";
-        $query .= " LIMIT $per_page OFFSET " . ($page_number - 1) * $per_page;
-
+        $query .= " ORDER BY `ID` DESC LIMIT $per_page OFFSET " . ($page_number - 1) * $per_page;
+        
         return $wpdb->get_results($query, 'ARRAY_A');
     }
 
